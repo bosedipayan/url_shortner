@@ -6,9 +6,13 @@ const PORT = 8001;
 const URL = require('./models/url');
 const path = require('path');
 
+const cookieParser = require('cookie-parser');
+
 const staticRoute = require('./routes/staticRouter');
 const urlRoute = require('./routes/url');
 const userRoute = require('./routes/user');
+
+const { restrictToLoggedinUserOnly } = require('./middlewares/auth')
 
 const { connnectToMongoDB } = require('./connect')
 
@@ -23,8 +27,10 @@ app.set('views', path.resolve("./views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(cookieParser());
 
-app.use('/url', urlRoute);
+
+app.use('/url', restrictToLoggedinUserOnly, urlRoute);
 app.use('/', staticRoute);
 app.use('/user', userRoute);
 
