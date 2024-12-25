@@ -12,7 +12,7 @@ const staticRoute = require('./routes/staticRouter');
 const urlRoute = require('./routes/url');
 const userRoute = require('./routes/user');
 
-const { restrictToLoggedinUserOnly } = require('./middlewares/auth')
+const { restrictToLoggedinUserOnly, checkAuth } = require('./middlewares/auth')
 
 const { connnectToMongoDB } = require('./connect')
 
@@ -32,7 +32,7 @@ app.use(cookieParser());
 
 app.use('/url', restrictToLoggedinUserOnly, urlRoute);
 app.use('/', staticRoute);
-app.use('/user', userRoute);
+app.use('/user', checkAuth, userRoute);
 
 // app.get('/test', async (req, res) => {
 //     try {
